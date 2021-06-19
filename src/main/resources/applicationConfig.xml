@@ -23,7 +23,8 @@
     <bean class="com.alibaba.druid.pool.DruidDataSource" id="dataSource" init-method="init" destroy-method="close">
         <!--    配置属性-->
         <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost:3306/travel"/>
+<!--        添加参数?useAffectedRows=true使mybatis返回影响的行数-->
+        <property name="url" value="jdbc:mysql://localhost:3306/travel?useAffectedRows=true"/>
         <property name="username" value="root"/>
         <property name="password" value="root"/>
         <!-- 配置监控统计拦截的filters -->
