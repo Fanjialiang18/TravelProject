@@ -1,7 +1,6 @@
 package clearlove3.util;
 
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 

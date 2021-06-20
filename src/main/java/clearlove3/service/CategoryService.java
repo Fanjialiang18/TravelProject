@@ -9,5 +9,5 @@ public interface CategoryService {
      * 查询所有Category
      * @return
      */
-    public List<Category> findall();
+    public List<Category> findAll();
 }

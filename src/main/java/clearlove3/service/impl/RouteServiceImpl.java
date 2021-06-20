@@ -5,9 +5,10 @@ import clearlove3.domain.PageBean;
 import clearlove3.domain.Route;
 import clearlove3.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-
+@Service("routeService")
 public class RouteServiceImpl implements RouteService {
     private RouteDao dao;
     @Autowired
