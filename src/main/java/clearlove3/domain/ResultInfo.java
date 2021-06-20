@@ -16,6 +16,16 @@ public class ResultInfo implements Serializable {
     public ResultInfo(boolean flag) {
         this.flag = flag;
     }
+
+    @Override
+    public String toString() {
+        return "ResultInfo{" +
+                "flag=" + flag +
+                ", data=" + data +
+                ", errorMsg='" + errorMsg + '\'' +
+                '}';
+    }
+
     /**
      * 有参构造方法
      * @param flag

@@ -32,10 +32,11 @@ public class CheckCodeController {
         }
         return sb.toString();
     }
+
         @RequestMapping(path = "/checkCode")
         public void getCode(HttpServletRequest request, HttpServletResponse response)throws ServletException, IOException
         {
-
+            System.out.println("产生了验证码");
             //服务器通知浏览器不要缓存
             response.setHeader("pragma","no-cache");
             response.setHeader("cache-control","no-cache");

@@ -3,11 +3,11 @@ package clearlove3.controller;
 import clearlove3.domain.ResultInfo;
 import clearlove3.domain.User;
 import clearlove3.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +20,20 @@ import java.util.Map;
 @Controller
 @RequestMapping(path = "/user")
 public class UserController {
-    private UserService userService;
-    private ObjectMapper objectMapper;
+    private final UserService userService;
+//    private ObjectMapper objectMapper;
 
     @Autowired
-    public UserController(UserService userService, ObjectMapper objectMapper) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.objectMapper = objectMapper;
     }
 
     @RequestMapping(path = "/login")
-    public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @ResponseBody
+    public ResultInfo login(HttpServletRequest request, HttpServletResponse response) {
         //判断验证码是否正确
         String check = request.getParameter("check");
+        System.out.println("login===================");
         //从session中获取验证码
         HttpSession session = request.getSession();
         String checkcode_server = (String) session.getAttribute("CHECKCODE_SERVER");
@@ -44,8 +45,8 @@ public class UserController {
             resultInfo.setFlag(false);
             resultInfo.setErrorMsg("验证码错误!");
             response.setContentType("application/json;charset=utf-8");
-            objectMapper.writeValue(response.getWriter(),resultInfo);
-            return;
+//            objectMapper.writeValue(response.getWriter(),resultInfo);
+            return resultInfo;
         }
         //首先获取用户名和数据
         String username = request.getParameter("username");
@@ -63,18 +64,20 @@ public class UserController {
             info.setFlag(false);
             info.setErrorMsg("密码或者账号不正确!");
         }
-        String json=objectMapper.writeValueAsString(info);
-        response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write(json);
+//        String json=objectMapper.writeValueAsString(info);
+//        response.setContentType("application/json;charset=utf-8");
+//        response.getWriter().write(json);
+        System.out.println(info);
+        return info;
     }
     @RequestMapping(path = "/active")
-    public void user_active(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void user_active(HttpServletRequest request, HttpServletResponse response) throws  IOException {
         String code = request.getParameter("code");
         String msg = null;
         if (code != null) {
             boolean flag = userService.active(code);
             if (flag) {
-                msg = "激活成功，请<a href='login.html'>登陆</a>";
+                msg = "激活成功，请<a href='../login.html'>登陆</a>";
             } else {
                 msg = "激活失败!请联系管理员!";
             }
@@ -89,16 +92,19 @@ public class UserController {
         response.sendRedirect(request.getContextPath()+"/login.html");
     }
     @RequestMapping(path = "/findUser")
-    public void findUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public User findUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //从session中获取
         Object user = req.getSession().getAttribute("user");
         resp.setContentType("application/json;charset=utf-8");
-        objectMapper.writeValue(resp.getOutputStream(),user);
+        return (User) user;
+//        objectMapper.writeValue(resp.getOutputStream(),user);
     }
-    @RequestMapping(path = "/register")
-    public void register(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @RequestMapping(path = "/regist")
+    @ResponseBody
+    public ResultInfo register(HttpServletRequest request, HttpServletResponse response){
         //判断验证码是否正确
         String check = request.getParameter("check");
+        System.out.println("==================");
         //从session中获取验证码
         HttpSession session = request.getSession();
         String checkcode_server = (String) session.getAttribute("CHECKCODE_SERVER");
@@ -110,8 +116,8 @@ public class UserController {
             resultInfo.setFlag(false);
             resultInfo.setErrorMsg("验证码错误!");
             response.setContentType("application/json;charset=utf-8");
-            objectMapper.writeValue(response.getWriter(),resultInfo);
-            return;
+//            objectMapper.writeValue(response.getWriter(),resultInfo);
+            return resultInfo;
         }
         //获取数据
         Map<String, String[]> parameterMap = request.getParameterMap();
@@ -124,7 +130,7 @@ public class UserController {
             e.printStackTrace();
         }
         //调用service层完成注册
-        boolean flag=userService.regist(user);
+        boolean flag=userService.register(user);
         ResultInfo info=new ResultInfo();
         if(flag){
             //注册成功
@@ -134,11 +140,12 @@ public class UserController {
             info.setFlag(false);
             info.setErrorMsg("注册失败");
         }
-        //将info序列化为json
+        /*//将info序列化为json
         String json=objectMapper.writeValueAsString(info);
         //将数据写回客户端
         response.setContentType("application/json;charset=utf-8");
-        response.getWriter().write(json);
+        response.getWriter().write(json);*/
+        return info;
     }
 }
 

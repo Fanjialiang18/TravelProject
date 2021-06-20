@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean regist(User user) {
+    public boolean register(User user) {
         User result = dao.searchUser(user.getUsername());
         if(result!=null){
             //若数据库查询到用户说明已经存在，注册失败

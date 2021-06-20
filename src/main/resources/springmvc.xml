@@ -30,6 +30,7 @@
     <mvc:resources mapping="/images/**" location="/images/"/>
     <mvc:resources mapping="/error/**" location="/error/"/>
     <mvc:resources mapping="/fonts/**" location="/fonts/"/>
+    <mvc:resources mapping="/**" location="/"/>
 
 <!--    开启注解支持-->
     <mvc:annotation-driven/>

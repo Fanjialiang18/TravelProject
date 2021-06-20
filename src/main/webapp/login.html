@@ -38,6 +38,7 @@
 				// if(checkUsername())
 				// 	$.post("/travel/loginServlet",$("#loginForm").serialize(),function (data) {
 					$.post("/travel/user/login",$("#loginForm").serialize(),function (data) {
+						alert(data)
 						if(data.flag)
 							location.href="index.html";
 						else
