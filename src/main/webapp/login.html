@@ -38,11 +38,11 @@
 				// if(checkUsername())
 				// 	$.post("/travel/loginServlet",$("#loginForm").serialize(),function (data) {
 					$.post("/travel/user/login",$("#loginForm").serialize(),function (data) {
-						alert(data)
+						console.log(data)
 						if(data.flag)
-							location.href="index.html";
+							location.href="/travel/index.html";
 						else
-							$("#errorMsg").html(data.errorMsg);
+							location.href="/travel/register.html";
 					});
 			});
 			$("#username").blur(checkUsername);
