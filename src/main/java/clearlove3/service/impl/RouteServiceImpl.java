@@ -23,7 +23,7 @@ public class RouteServiceImpl implements RouteService {
         //计算开始的页数
         int start = (currentPage - 1) * pageSize;
         //调用Dao层完成查询
-        List<Route> routes = dao.queryByPage(cid, currentPage, pageSize);
+        List<Route> routes = dao.queryByPage(cid, start, pageSize);
         //创建一个PageBean并且为其设置值
         PageBean<Route> pageBean = new PageBean<>();
         pageBean.setCurrentPage(currentPage);

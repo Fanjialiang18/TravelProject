@@ -148,12 +148,5 @@ public class UserController {
         response.getWriter().write(json);*/
         return info;
     }
-    @RequestMapping(path = "/test")
-    public ResultInfo test(){
-        ResultInfo info=new ResultInfo();
-        info.setFlag(true);
-        System.out.println(info);
-        return info;
-    }
 }
 

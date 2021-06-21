@@ -19,10 +19,11 @@
             <li class="threeword"><a href="javascript:;">下一页</a></li>
             <li class="threeword"><a href="javascript:;">末页</a></li>
              */
-            load(cid);
+            load1(cid);
+        });
             // location.reload();
             //发送ajax请求获取数据
-            function load(cid, currentPage) {
+            function load1(cid, currentPage) {
                 $.get("/travel/route/queryByPage", {cid: cid,currentPage:currentPage}, function (pageBean) {
                     //设置总数
                     // alert(pageBean.totalCount);
@@ -32,53 +33,54 @@
                     //展示导航条
                     var bottomstr = "";
                     var before=pageBean.currentPage-1;
+                    var next=pageBean.currentPage+1;
                     if(before<=0)
                         before=1;
-                    bottomstr += '<li onclick="javascript:load('+cid+')"><a href="javascript:void(0)">首页</a></li>' +
-                        '<li class="threeword" onclick="javascript:load('+cid+','+before+')"><a href="javascript:void(0)">上一页</a></li>';
+                    bottomstr += '<li onclick="load1('+cid+')"><a href="javascript:void(0)">首页</a></li>' +
+                        '<li class="threeword" onclick="load1('+cid+','+before+')"><a href="javascript:void(0)">上一页</a></li>';
                     for (let i = 1; i <= pageBean.totalPage; i++) {
                         if(pageBean.currentPage===i)
-                            bottomstr += '<li class="curPage" onclick="javascript:load('+cid+','+i+')"><a  href="javascript:void(0)">' + i + '</a></li>';
+                            bottomstr += '<li class="curPage" onclick="load1('+cid+','+i+')"><a  href="javascript:void(0)">' + i + '</a></li>';
                         else
-                            bottomstr += '<li onclick="javascript:load('+cid+','+i+')"><a href="javascript:void(0)">' + i + '</a></li>';
+                            bottomstr += '<li onclick="load1('+cid+','+i+')"><a href="javascript:void(0)">' + i + '</a></li>';
 
                     }
 
                     // alert(bottomstr);
-                    bottomstr += '<li class="threeword"><a href="javascript:;">下一页</a></li>\n' +
-                        '<li class="threeword"><a href="javascript:;">末页</a></li>';
+                    bottomstr += '<li class="threeword"><a href="javascript:load1('+cid+','+next+')">下一页</a></li>\n' +
+                        '<li class="threeword"><a href="javascript:load1('+cid+','+pageBean.totalPage+')">末页</a></li>';
                     $("#bottom_bar").html(bottomstr);
 
-                    /*                <li>
-                                        <div className="img"><img src="images/04-search_03.jpg" alt=""></div>
-                                        <div className="text1">
-                                            <p>【减100元 含除夕/春节出发】广州增城三英温泉度假酒店/自由行套票</p>
-                                            <br/>
-                                            <p>1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
-                                        </div>
-                                        <div className="price">
-                                            <p className="price_num">
-                                                <span>&yen;</span>
-                                                <span>299</span>
-                                                <span>起</span>
-                                            </p>
-                                            <p><a href="route_detail.html">查看详情</a></p>
-                                        </div>
-                                    </li>*/
+                    /*/<li>
+                    <div class="img"><img src="images/04-search_03.jpg" alt=""></div>
+                    <div class="text1">
+                        <p>【减100元 含除夕/春节出发】广州增城三英温泉度假酒店/自由行套票</p>
+                        <br/>
+                        <p>1-2月出发，网付立享￥1099/2人起！爆款位置有限，抢完即止！</p>
+                    </div>
+                    <div class="price">
+                        <p class="price_num">
+                            <span>&yen;</span>
+                            <span>299</span>
+                            <span>起</span>
+                        </p>
+                        <p><a href="route_detail.html">查看详情</a></p>
+                    </div>
+                </li>*/
                     //将数据展示到网页中
 
                     var route_list = "";
                     for (var i = 0; i < pageBean.list.length; i++) {
                         var info = pageBean.list[i];
                         var li = '<li>\n' +
-                            '<div className="img" ><img src="' + info.rimage + '" alt="" style="width: 299px;"></div>\n' +
-                            '                    <div className="text1" style="">\n' +
+                            '<div class="img" ><img src="' + info.rimage + '" alt="" style="width: 299px;"></div>\n' +
+                            '                    <div class="text1">\n' +
                             '                        <p>' + info.rname + '</p>\n' +
                             '                        <br/>\n' +
                             '                        <p>' + info.routeIntroduce + '</p>\n' +
                             '                    </div>\n' +
-                            '                    <div className="price">\n' +
-                            '                        <p className="price_num">\n' +
+                            '                    <div class="price">\n' +
+                            '                        <p class="price_num">\n' +
                             '                            <span>&yen;</span>\n' +
                             '                            <span>' + info.price + '</span>\n' +
                             '                            <span>起</span>\n' +
@@ -89,12 +91,12 @@
 
                         route_list += li;
                     }
-                    $("#route_info").html(route_list);
+                    $("#route").html(route_list);
 
                 });
                 // location.reload();
             }
-        });
+
 
     </script>
 </head>
@@ -113,7 +115,7 @@
                     <span>商品信息</span>
                     <span class="jg">价格</span>
                 </div>
-                <ul id="route_info">
+                <ul id="route">
                     <li>
                         <div class="img"><img src="images/04-search_03.jpg" alt=""></div>
                         <div class="text1">
