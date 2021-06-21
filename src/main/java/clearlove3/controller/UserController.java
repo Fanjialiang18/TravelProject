@@ -92,14 +92,15 @@ public class UserController {
         response.sendRedirect(request.getContextPath()+"/login.html");
     }
     @RequestMapping(path = "/findUser")
-    public User findUser(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    @ResponseBody
+    public User findUser(HttpServletRequest req, HttpServletResponse resp){
         //从session中获取
         Object user = req.getSession().getAttribute("user");
         resp.setContentType("application/json;charset=utf-8");
         return (User) user;
 //        objectMapper.writeValue(resp.getOutputStream(),user);
     }
-    @RequestMapping(path = "/regist")
+    @RequestMapping(path = "/register")
     @ResponseBody
     public ResultInfo register(HttpServletRequest request, HttpServletResponse response){
         //判断验证码是否正确

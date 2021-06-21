@@ -64,7 +64,7 @@
 					//若校验没有问题则发送ajax请求
 					//调用serialize将表单序列化为文本
 					if(checkUsername() &&checkPassword()&&checkEmail())
-						$.post("user/register",$(this).serialize(),function (data) {
+						$.post("/user/register",$(this).serialize(),function (data) {
 							if(data.flag)
 								location.href="register_ok.html";
 							else
