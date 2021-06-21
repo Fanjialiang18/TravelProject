@@ -24,15 +24,16 @@ public class RouteController {
 
     @RequestMapping(path = "/queryByPage")
     @ResponseBody
-    public PageBean<Route> queryByPage(HttpServletRequest request) throws IOException {
+    public PageBean<Route> queryByPage(HttpServletRequest request){
         //首先从request中获取参数
+        String rname = request.getParameter("rname");
         String currentPageStr = request.getParameter("currentPage");
         System.out.println(currentPageStr);
         String pageSizeStr = request.getParameter("pageSize");
         System.out.println(pageSizeStr);
         String cidStr = request.getParameter("cid");
         System.out.println(cidStr);
-        int cid=0;
+        int cid=5;
         int pageSize=5;
         int currentPage=1;
         if(cidStr!=null&&cidStr.length()!=0){
@@ -51,5 +52,18 @@ public class RouteController {
         }
         return routePageBean;
         //将查询到的对象序列化并且返回到网页
+    }
+
+    /**
+     * 根据rid查询一个路线
+     * @param request
+     */
+    @RequestMapping(path = "/findOne")
+    @ResponseBody
+    public Route findOne(HttpServletRequest request){
+        String rid = request.getParameter("rid");
+        Route route=routeService.findOne(rid);
+        System.out.println(route);
+        return route;
     }
 }

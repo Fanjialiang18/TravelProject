@@ -24,5 +24,8 @@ public interface RouteDao {
      * @return
      */
     @Select("select count(*) from tab_route where cid = #{cid}")
-    public int queryTotal(int cid);
+    public int queryTotal(@Param("cid") int cid);
+
+    @Select("select * from tab_route where rid = #{rid}")
+    public Route findOne(int rid);
 }
