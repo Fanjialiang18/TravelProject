@@ -2,23 +2,25 @@ package clearlove3.controller;
 
 import clearlove3.domain.PageBean;
 import clearlove3.domain.Route;
+import clearlove3.domain.User;
+import clearlove3.service.FavoriteService;
 import clearlove3.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.Date;
 
 @Controller
 @RequestMapping(path = "/route")
 public class RouteController {
+    private final FavoriteService favoriteService;
     private final RouteService routeService;
     @Autowired
-    public RouteController(RouteService routeService) {
+    public RouteController(FavoriteService favoriteService, RouteService routeService) {
+        this.favoriteService = favoriteService;
         this.routeService = routeService;
     }
 
@@ -65,5 +67,44 @@ public class RouteController {
         Route route=routeService.findOne(rid);
         System.out.println(route);
         return route;
+    }
+
+    /**
+     * 判断改路线是否被用户收藏
+     * @param request
+     * @return
+     */
+    @RequestMapping(path = "/isFavorite")
+    @ResponseBody
+    public boolean isFavorite(HttpServletRequest request){
+        String rid = request.getParameter("rid");
+        int uid;
+        User user = (User)request.getSession().getAttribute("user");
+        System.out.println(user);
+        if(user==null){
+            uid=0;
+        }else {
+            uid=user.getUid();
+        }
+        return favoriteService.isFavorite(uid, Integer.parseInt(rid));
+    }
+
+    /**
+     * 添加收藏
+     * @param request
+     */
+    @RequestMapping(path = "/addFavorite")
+    public void addFavorite(HttpServletRequest request){
+        String rid = request.getParameter("rid");
+        int uid;
+        User user = (User)request.getSession().getAttribute("user");
+        System.out.println(user);
+        if(user==null){
+            return;
+        }else{
+            uid=user.getUid();
+        }
+        Date date=new Date();
+        favoriteService.addFavorite(uid,Integer.parseInt(rid),date);
     }
 }

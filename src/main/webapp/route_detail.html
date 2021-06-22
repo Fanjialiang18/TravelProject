@@ -68,10 +68,10 @@
                 <div class="pros_price">
                     <p class="price"><strong id="price">¥2699.00</strong><span>起</span></p>
                     <p class="collect">
-                        <a class="btn"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
+                        <a class="btn" id="favorite" onclick="addFavorite()"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
 
-                        <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>
-                        <span>已收藏100次</span>
+<!--                        <a  class="btn already" disabled="disabled"><i class="glyphicon glyphicon-heart-empty"></i>点击收藏</a>-->
+                        <span id="favorite_times">已收藏100次</span>
                     </p>
                 </div>        
             </div>
@@ -197,7 +197,36 @@
             ddstr+='<a class="down_img down_img_disable" style="margin-bottom: 0;"></a>';
             console.log(ddstr);
             $("#images").html(ddstr);
+            //设置收藏次数
+            $("#favorite_times").html("已被收藏"+route.count+"次");
             goImg();
+        })
+    })
+    function addFavorite(){
+        $.get("user/findUser",{},function (user){
+            var rid=getParameter("rid");
+            if(user==null) {
+                alert("请登录!");
+                location.href="login.html";
+            }else {
+                $.get("route/addFavorite",{rid:rid},function (){
+                    location.reload();
+                })
+            }
+
+        })
+    }
+    $(function (){
+        //判断用户是否收藏过改路线
+        var rid=getParameter("rid");
+        $.get("route/isFavorite",{rid:rid},function (flag){
+            if(flag){
+                //用户收藏过该路线删除按钮的点击事件
+                $("#favorite").addClass("already").attr("disabled","disabled").removeAttr("onclick");
+
+            }else {
+
+            }
         })
     })
     </script>

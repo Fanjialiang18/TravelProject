@@ -1,5 +1,6 @@
 package clearlove3.service.impl;
 
+import clearlove3.dao.FavoriteDao;
 import clearlove3.dao.RouteDao;
 import clearlove3.dao.RouteImgDao;
 import clearlove3.dao.SellerDao;
@@ -17,12 +18,15 @@ public class RouteServiceImpl implements RouteService {
     private final RouteDao dao;
     private final RouteImgDao routeImgDao;
     private final SellerDao sellerDao;
+    private final FavoriteDao favoriteDao;
     @Autowired
-    public RouteServiceImpl(RouteDao dao, RouteImgDao routeImgDao,SellerDao sellerDao) {
+    public RouteServiceImpl(RouteDao dao, RouteImgDao routeImgDao, SellerDao sellerDao, FavoriteDao favoriteDao) {
         this.dao = dao;
         this.routeImgDao = routeImgDao;
         this.sellerDao=sellerDao;
+        this.favoriteDao = favoriteDao;
     }
+
 
     @Override
     public Route findOne(String rid) {
@@ -32,6 +36,8 @@ public class RouteServiceImpl implements RouteService {
         one.setRouteImgList(images);
         Seller seller = sellerDao.findBySid(one.getSid());
         one.setSeller(seller);
+        int count=favoriteDao.findCountByRid(num);
+        one.setCount(count);
         System.out.println(one);
         return one;
     }
