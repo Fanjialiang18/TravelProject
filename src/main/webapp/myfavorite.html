@@ -32,7 +32,7 @@
                     <!-- Tab panes -->
                     <div class="tab-content">
                         <div role="tabpanel" class="tab-pane active" id="home">
-                            <div class="row">
+                            <div class="row" id="route_list">
                                 <div class="col-md-3">
                                     <a href="route_detail.html">
                                         <img src="images/collection_pic.jpg" alt="">
@@ -145,22 +145,26 @@
                         </div>                       
                     </div>
                 </div>
+                <div class="page_num_inf">
+                    <i></i> 共
+                    <span id="totalPage">12</span>页<span id="totalNum">132</span>条
+                </div>
                 <div class="pageNum">
-                    <ul>
-                        <li><a href="">首页</a></li>
-                        <li class="threeword"><a href="#">上一页</a></li>
-                        <li><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">6</a></li>
-                        <li><a href="#">7</a></li>
-                        <li><a href="#">8</a></li>
-                        <li><a href="#">9</a></li>
-                        <li><a href="#">10</a></li>
-                        <li class="threeword"><a href="javascript:;">下一页</a></li>
-                        <li class="threeword"><a href="javascript:;">末页</a></li>
+                    <ul id="bottom_bar">
+<!--                        <li><a href="">首页</a></li>-->
+<!--                        <li class="threeword"><a href="#">上一页</a></li>-->
+<!--                        <li><a href="#">1</a></li>-->
+<!--                        <li><a href="#">2</a></li>-->
+<!--                        <li><a href="#">3</a></li>-->
+<!--                        <li><a href="#">4</a></li>-->
+<!--                        <li><a href="#">5</a></li>-->
+<!--                        <li><a href="#">6</a></li>-->
+<!--                        <li><a href="#">7</a></li>-->
+<!--                        <li><a href="#">8</a></li>-->
+<!--                        <li><a href="#">9</a></li>-->
+<!--                        <li><a href="#">10</a></li>-->
+<!--                        <li class="threeword"><a href="javascript:;">下一页</a></li>-->
+<!--                        <li class="threeword"><a href="javascript:;">末页</a></li>-->
                     </ul>
                 </div>
             </section>                      
@@ -171,5 +175,73 @@
     	<div id="footer"></div>
         <!--导入布局js，共享header和footer-->
         <script type="text/javascript" src="js/include.js"></script>
+    <script src="js/getParameter.js"></script>
+    <script>
+        $(function (){
+            //首先判断是否已经登录
+            $.get("user/findUser",{},function (user){
+                if(user==null){
+                    //未登录
+                    alert("请登录!");
+                    location.href="login.html";
+                }else{
+                    load1(user.uid,1);
+                }
+            })
+        })
+        function load1(uid,currentPage){
+            $.get("route/findFavorite",{uid:uid,currentPage:currentPage},function (pageBean){
+                $("#totalPage").html(pageBean.totalPage);
+                $("#totalNum").html(pageBean.totalCount);
+                var bottomstr = "";
+                var before=pageBean.currentPage-1;
+                var next=pageBean.currentPage+1;
+                if(before<=0)
+                    before=1;
+                bottomstr += '<li onclick="load1('+uid+','+1+')"><a href="javascript:void(0)">首页</a></li>' +
+                    '<li class="threeword" onclick="load1('+uid+','+before+')"><a href="javascript:void(0)">上一页</a></li>';
+                for (let i = 1; i <= pageBean.totalPage; i++) {
+                    if(pageBean.currentPage===i)
+                        bottomstr += '<li class="curPage" onclick="load1('+uid+','+i+')"><a  href="javascript:void(0)">' + i + '</a></li>';
+                    else
+                        bottomstr += '<li onclick="load1('+uid+','+i+')"><a href="javascript:void(0)">' + i + '</a></li>';
+
+                }
+
+                 // alert(bottomstr);
+                bottomstr += '<li class="threeword"><a href="javascript:load1('+uid+','+next+')">下一页</a></li>\n' +
+                    '<li class="threeword"><a href="javascript:load1('+uid+','+pageBean.totalPage+')">末页</a></li>';
+                // alert(bottomstr);
+
+                /*<div className="col-md-3">
+                    <a href="route_detail.html">
+                        <img src="images/collection_pic.jpg" alt="">
+                            <div className="has_border">
+                                <h3>上海直飞三亚5天4晚自由行(春节预售+亲子/蜜月/休闲游首选+豪华酒店任选+接送机)</h3>
+                                <div className="price">网付价<em>￥</em><strong>889</strong><em>起</em></div>
+                            </div>
+                    </a>
+                </div>*/
+
+                $("#bottom_bar").html(bottomstr);
+                var route_list = "";
+                for (var i = 0; i < pageBean.list.length; i++) {
+                    var info = pageBean.list[i];
+                    var li = '<div class="col-md-3">\n' +
+                        '                    <a href="route_detail.html?rid='+info.rid+'">\n' +
+                        '                        <img src="'+info.rimage+'" alt="">\n' +
+                        '                            <div class="has_border">\n' +
+                        '                                <h3>'+info.rname+'</h3>\n' +
+                        '                                <div class="price">网付价<em>￥</em><strong>'+info.price+'</strong><em>起</em></div>\n' +
+                        '                            </div>\n' +
+                        '                    </a>\n' +
+                        '                </div>';
+
+                    route_list += li;
+                }
+                $("#route_list").html(route_list);
+            })
+        }
+    </script>
     </body>
 </html>

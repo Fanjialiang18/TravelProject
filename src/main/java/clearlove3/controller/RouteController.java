@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 @RequestMapping(path = "/route")
@@ -106,5 +107,35 @@ public class RouteController {
         }
         Date date=new Date();
         favoriteService.addFavorite(uid,Integer.parseInt(rid),date);
+    }
+    @RequestMapping(path = "/findFavorite")
+    @ResponseBody
+    public PageBean<Route> findFavorite(HttpServletRequest request){
+        //首先从request中获取参数
+        String currentPageStr = request.getParameter("currentPage");
+        System.out.println(currentPageStr);
+        String pageSizeStr = request.getParameter("pageSize");
+        System.out.println(pageSizeStr);
+        String uidStr = request.getParameter("uid");
+        System.out.println(uidStr);
+        int uid=0;
+        int pageSize=12;
+        int currentPage=1;
+        if(uidStr!=null&&uidStr.length()!=0){
+            uid = Integer.parseInt(uidStr);
+        }
+        if(pageSizeStr!=null&&pageSizeStr.length()!=0){
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+        if(currentPageStr!=null&&currentPageStr.length()!=0){
+            currentPage = Integer.parseInt(currentPageStr);
+        }
+        PageBean<Route> favoriteByPage = routeService.findFavoriteByPage(uid, currentPage, pageSize);
+        //调用service查询PageBean对象
+        for(Route r : favoriteByPage.getList()){
+            System.out.println(r);
+        }
+        return favoriteByPage;
+        //将查询到的对象序列化并且返回到网页
     }
 }

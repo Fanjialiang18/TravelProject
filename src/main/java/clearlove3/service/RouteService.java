@@ -19,4 +19,6 @@ public interface RouteService {
      * @return
      */
     Route findOne(String rid);
+
+    public PageBean<Route> findFavoriteByPage(int uid,int currentPage, int pageSize);
 }

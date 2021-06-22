@@ -12,6 +12,7 @@ import clearlove3.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 @Service("routeService")
 public class RouteServiceImpl implements RouteService {
@@ -54,6 +55,27 @@ public class RouteServiceImpl implements RouteService {
         PageBean<Route> pageBean = new PageBean<>();
         pageBean.setCurrentPage(currentPage);
         pageBean.setCid(cid);
+        pageBean.setTotalCount(totalCount);
+        pageBean.setList(routes);
+        pageBean.setTotalPage(totalCount % pageSize == 0 ? totalCount / pageSize : (totalCount / pageSize) + 1);
+        return pageBean;
+    }
+    @Override
+    public PageBean<Route> findFavoriteByPage(int uid,int currentPage, int pageSize){
+        //首先查询所有的记录数
+        int totalCount=favoriteDao.findAllFavorite(uid);
+        //计算开始的页数
+        int start = (currentPage - 1) * pageSize;
+        //调用Dao层完成查询
+        List<Integer> favorite = favoriteDao.findFavoriteByPage(uid, start, pageSize);
+        List<Route> routes=new ArrayList<>();
+        for (Integer rid :
+                favorite) {
+            routes.add(dao.findOne(rid));
+        }
+        //创建一个PageBean并且为其设置值
+        PageBean<Route> pageBean = new PageBean<>();
+        pageBean.setCurrentPage(currentPage);
         pageBean.setTotalCount(totalCount);
         pageBean.setList(routes);
         pageBean.setTotalPage(totalCount % pageSize == 0 ? totalCount / pageSize : (totalCount / pageSize) + 1);

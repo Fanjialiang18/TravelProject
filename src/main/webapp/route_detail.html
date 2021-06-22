@@ -210,6 +210,7 @@
                 location.href="login.html";
             }else {
                 $.get("route/addFavorite",{rid:rid},function (){
+                    judgeFavorite(rid);
                     location.reload();
                 })
             }
@@ -219,16 +220,16 @@
     $(function (){
         //判断用户是否收藏过改路线
         var rid=getParameter("rid");
+        judgeFavorite(rid);
+    })
+    function judgeFavorite(rid){
         $.get("route/isFavorite",{rid:rid},function (flag){
             if(flag){
                 //用户收藏过该路线删除按钮的点击事件
                 $("#favorite").addClass("already").attr("disabled","disabled").removeAttr("onclick");
-
-            }else {
-
             }
         })
-    })
+    }
     </script>
 </body>
 
